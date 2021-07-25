@@ -3,7 +3,6 @@ package com.api.book.bootrestbook.services;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import com.api.book.bootrestbook.entities.Book;
@@ -58,6 +57,19 @@ public class BookService
             }
         }).collect(Collectors.toList());
 
+    }
+
+    //update the book 
+    public void updateBook(int bookId,Book book)
+    {
+       list= list.stream().map(b->{
+            if(b.getId()==bookId)
+            {
+                b.setTitle(book.getTitle());
+                b.setAuthor(book.getAuthor());
+            }
+            return b;
+        }).collect(Collectors.toList());
     }
     
 }
