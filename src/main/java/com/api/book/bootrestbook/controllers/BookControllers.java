@@ -1,11 +1,15 @@
 package com.api.book.bootrestbook.controllers;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.api.book.bootrestbook.entities.Book;
 import com.api.book.bootrestbook.services.BookService;
 
+import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,43 +26,82 @@ public class BookControllers
     
     //get all book mapping
     @GetMapping("/books")
-    public List<Book> getBooks()
+    public ResponseEntity<List<Book>> getBooks()
     {       
-        List<Book> allboBooks = this.bookService.getAllboBooks(); 
-        return allboBooks;
+        List<Book> list = this.bookService.getAllboBooks(); 
+        if(list.size()<=0)
+        {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        return ResponseEntity.of(Optional.of(list));
     }
     
     //get by id mapping
     @GetMapping("/books/{id}")
-    public Book getBookById(@PathVariable("id") int id)
+    public ResponseEntity<Book> getBookById(@PathVariable("id") int id)
     {
-        Book bookById = this.bookService.getBookById(id);
-        return bookById;
+        Book book = this.bookService.getBookById(id);
+        if(book==null)
+        {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        return ResponseEntity.of(Optional.of(book));
 
     }
 
     //create maping
     @PostMapping("/books/add")
-    public Book addBook(@RequestBody Book book)
+    public ResponseEntity<Book> addBook(@RequestBody Book book)
     {
-        Book b =this.bookService.addBook(book);
-        return b;
+        Book b=null;
+        try
+        {
+            b = this.bookService.addBook(book);
+            System.out.println(b);
+            return ResponseEntity.of(Optional.of(b));
+            
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+        
+        
     }
 
        
     //delete a book
     @DeleteMapping("/books/delete/{bookId}")
-    public void deleteBook(@PathVariable("bookId") int bookId)
+    public ResponseEntity<Void> deleteBook(@PathVariable("bookId") int bookId)
     {
-        this.bookService.deleteBook(bookId);
+        try 
+        {
+            this.bookService.deleteBook(bookId);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        } 
+        catch (Exception e) 
+        {
+         e.printStackTrace();
+         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
         
     }
     
     //update mapping
     @PutMapping("/books/update/{bookId}")
-    public Book updateBook(@PathVariable("bookId") int bookById,@RequestBody Book book)
+    public ResponseEntity<Book> updateBook(@PathVariable("bookId") int bookById,@RequestBody Book book)
     {
-        this.bookService.updateBook(bookById,book);
-        return book;
+        try 
+        {
+            this.bookService.updateBook(bookById,book);
+            return ResponseEntity.ok().body(book);   
+        } 
+        catch (Exception e) 
+        {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+        
     }
 }
