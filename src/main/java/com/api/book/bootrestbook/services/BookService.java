@@ -3,6 +3,8 @@ package com.api.book.bootrestbook.services;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import com.api.book.bootrestbook.entities.Book;
 
@@ -39,6 +41,22 @@ public class BookService
     {
         list.add(book);
         return book;
+
+    }
+
+    //delete book
+    public void deleteBook(int bookId)
+    {
+        list=list.stream().filter(book->{
+            if(book.getId()!=bookId)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }).collect(Collectors.toList());
 
     }
     
