@@ -11,6 +11,7 @@ public class Book
         this.title = title;
         this.author = author;
     }
+    
 
     public Book() 
     {
@@ -45,13 +46,7 @@ public class Book
         return "Book [author=" + author + ", id=" + id + ", title=" + title + "]";
     }
 
-    public void setId(int id2) {
-    }
-
-    
-
-
-    
+      
 
     
 }
