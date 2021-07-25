@@ -6,7 +6,6 @@ import java.util.Optional;
 import com.api.book.bootrestbook.entities.Book;
 import com.api.book.bootrestbook.services.BookService;
 
-import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,7 +32,7 @@ public class BookControllers
         {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-        return ResponseEntity.of(Optional.of(list));
+        return ResponseEntity.status(HttpStatus.CREATED).body(list);
     }
     
     //get by id mapping
@@ -58,7 +57,7 @@ public class BookControllers
         {
             b = this.bookService.addBook(book);
             System.out.println(b);
-            return ResponseEntity.of(Optional.of(b));
+            return ResponseEntity.status(HttpStatus.CREATED).build();
             
         }
         catch(Exception e)
